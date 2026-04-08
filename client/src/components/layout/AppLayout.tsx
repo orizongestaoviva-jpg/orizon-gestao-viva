@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { canAccessModule } from "@/lib/permissions";
 
 interface NavItem {
   icon: React.ElementType;
@@ -117,9 +118,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const { user, logout, switchRole } = useAuth();
 
-  const filteredGroups = navGroups.filter(
-    (g) => !g.roles || !user || g.roles.includes(user.role)
-  );
+  const filteredGroups = navGroups
+    .filter((g) => !g.roles || !user || g.roles.includes(user.role))
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => user && canAccessModule(user.role, item.href.slice(1)))
+    }))
+    .filter((g) => g.items.length > 0);
 
   const roleInfo = user ? roleLabels[user.role] : null;
 
