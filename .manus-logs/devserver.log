@@ -1,0 +1,90 @@
+[2026-04-09T22:37:22.644Z] Dev server process group stopped
+[2026-04-09T22:37:22.666Z] Dev server exited with code -15
+[2026-04-09T22:37:25.658Z] Starting dev server with command: NODE_ENV=development tsx watch server/_core/index.ts
+[2026-04-09T22:37:25.684Z] /bin/sh: 1: tsx: not found
+[2026-04-09T22:37:25.685Z] Dev server exited with code 127
+[2026-04-09T22:38:35.427Z] Starting dev server with command: NODE_ENV=development tsx watch server/_core/index.ts
+[2026-04-09T22:38:36.592Z] [Server] ORIZON SaaS running on port 3000
+[2026-04-09T22:39:11.478Z] Dev server process group stopped
+[2026-04-09T22:39:11.514Z] Dev server exited with code -15
+[2026-04-09T22:40:21.964Z] Starting dev server with command: NODE_ENV=development tsx watch server/_core/index.ts
+[2026-04-09T22:40:23.012Z] [Server] ORIZON SaaS running on port 3000
+[2026-04-09T22:40:46.416Z] 6:40:46 PM [tsx] change in ./server/_core/index.ts Restarting...
+[2026-04-09T22:40:47.344Z] c[Server] ORIZON SaaS running on port 3000
+[2026-04-09T22:40:47.901Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:40:50.722Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:40:55.535Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:40:56.335Z] Dev server process group stopped
+[2026-04-09T22:40:56.370Z] Dev server exited with code -15
+[2026-04-09T22:40:59.346Z] Starting dev server with command: NODE_ENV=development tsx watch server/_core/index.ts
+[2026-04-09T22:41:00.397Z] [Server] ORIZON SaaS running on port 3000
+[2026-04-09T22:41:01.500Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:04.659Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:08.948Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:11.304Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:13.897Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:16.403Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:21.376Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:25.858Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:30.801Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:33.216Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:34.962Z] Dev server process group stopped
+[2026-04-09T22:41:34.986Z] Dev server exited with code -15
+[2026-04-09T22:41:37.974Z] Starting dev server with command: NODE_ENV=development tsx watch server/_core/index.ts
+[2026-04-09T22:41:39.034Z] [Server] ORIZON SaaS running on port 3000
+[2026-04-09T22:41:40.124Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:40.453Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:44.067Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:47.051Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:51.704Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:53.959Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:41:59.647Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:42:04.822Z] Error: ENOENT: no such file or directory, stat '/home/ubuntu/orizon-gestao-viva/client/dist/index.html'
+[2026-04-09T22:42:05.491Z] 6:42:05 PM [tsx] change in ./server/_core/index.ts Restarting...
+[2026-04-09T22:42:06.318Z] c[Server] ORIZON SaaS running on port 3000
+[2026-04-09T22:42:10.608Z] Dev server process group stopped
+[2026-04-09T22:42:10.650Z] Dev server exited with code -15
+[2026-04-09T22:42:13.619Z] Starting dev server with command: NODE_ENV=development tsx watch server/_core/index.ts
+[2026-04-09T22:42:14.663Z] [Server] ORIZON SaaS running on port 3000
+[2026-04-09T22:45:01.864Z] 6:45:01 PM [tsx] change in ./server/routers.ts Restarting...
+[2026-04-09T22:45:02.228Z] c
+[2026-04-09T22:45:02.229Z] node:internal/modules/run_main:122
+[2026-04-09T22:45:02.230Z] triggerUncaughtException(
+[2026-04-09T22:45:02.230Z] ^
+[2026-04-09T22:45:02.230Z] Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/ubuntu/orizon-gestao-viva/server/_core/llm' imported from /home/ubuntu/orizon-gestao-viva/server/_core/ai.ts
+[2026-04-09T22:45:02.231Z] at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+[2026-04-09T22:45:02.231Z] at moduleResolve (node:internal/modules/esm/resolve:932:10)
+[2026-04-09T22:45:02.231Z] at defaultResolve (node:internal/modules/esm/resolve:1056:11)
+[2026-04-09T22:45:02.232Z] at nextResolve (node:internal/modules/esm/hooks:748:28)
+[2026-04-09T22:45:02.232Z] at resolveBase (file:///home/ubuntu/orizon-gestao-viva/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1775774701974:2:3744)
+[2026-04-09T22:45:02.232Z] at async resolveDirectory (file:///home/ubuntu/orizon-gestao-viva/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1775774701974:2:4237)
+[2026-04-09T22:45:02.233Z] at async resolve (file:///home/ubuntu/orizon-gestao-viva/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1775774701974:2:5355)
+[2026-04-09T22:45:02.233Z] at async nextResolve (node:internal/modules/esm/hooks:748:22)
+[2026-04-09T22:45:02.233Z] at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+[2026-04-09T22:45:02.233Z] at async handleMessage (node:internal/modules/esm/worker:199:18) {
+[2026-04-09T22:45:02.234Z] code: 'ERR_MODULE_NOT_FOUND',
+[2026-04-09T22:45:02.234Z] url: 'file:///home/ubuntu/orizon-gestao-viva/server/_core/llm'
+[2026-04-09T22:45:02.234Z] }
+[2026-04-09T22:45:02.235Z] 
+[2026-04-09T22:45:02.235Z] Node.js v22.13.0
+[2026-04-09T22:46:57.377Z] 6:46:57 PM [tsx] change in ./shared/const.ts Rerunning...
+[2026-04-09T22:46:57.672Z] c
+[2026-04-09T22:46:57.701Z] node:internal/modules/run_main:122
+[2026-04-09T22:46:57.701Z] triggerUncaughtException(
+[2026-04-09T22:46:57.702Z] ^
+[2026-04-09T22:46:57.702Z] Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/ubuntu/orizon-gestao-viva/server/_core/llm' imported from /home/ubuntu/orizon-gestao-viva/server/_core/ai.ts
+[2026-04-09T22:46:57.703Z] at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+[2026-04-09T22:46:57.703Z] at moduleResolve (node:internal/modules/esm/resolve:932:10)
+[2026-04-09T22:46:57.704Z] at defaultResolve (node:internal/modules/esm/resolve:1056:11)
+[2026-04-09T22:46:57.704Z] at nextResolve (node:internal/modules/esm/hooks:748:28)
+[2026-04-09T22:46:57.704Z] at resolveBase (file:///home/ubuntu/orizon-gestao-viva/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1775774817470:2:3744)
+[2026-04-09T22:46:57.705Z] at async resolveDirectory (file:///home/ubuntu/orizon-gestao-viva/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1775774817470:2:4237)
+[2026-04-09T22:46:57.705Z] at async resolve (file:///home/ubuntu/orizon-gestao-viva/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1775774817470:2:5355)
+[2026-04-09T22:46:57.705Z] at async nextResolve (node:internal/modules/esm/hooks:748:22)
+[2026-04-09T22:46:57.705Z] at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+[2026-04-09T22:46:57.706Z] at async handleMessage (node:internal/modules/esm/worker:199:18) {
+[2026-04-09T22:46:57.706Z] code: 'ERR_MODULE_NOT_FOUND',
+[2026-04-09T22:46:57.706Z] url: 'file:///home/ubuntu/orizon-gestao-viva/server/_core/llm'
+[2026-04-09T22:46:57.706Z] }
+[2026-04-09T22:46:57.707Z] 
+[2026-04-09T22:46:57.707Z] Node.js v22.13.0
