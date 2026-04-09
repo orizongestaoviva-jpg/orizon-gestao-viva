@@ -697,7 +697,328 @@ function getTasksFilterByProfile(context) {
 }
 
 // server/routers.ts
+import { z as z2 } from "zod";
+
+// server/routers-extended.ts
 import { z } from "zod";
+
+// server/_core/llm.ts
+async function invokeLLM(options) {
+  try {
+    const response = await fetch(`${ENV.builtInForgeApiUrl}/v1/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${ENV.builtInForgeApiKey}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4",
+        messages: options.messages,
+        temperature: options.temperature || 0.7,
+        max_tokens: options.maxTokens || 2e3
+      })
+    });
+    if (!response.ok) {
+      throw new Error(`LLM API error: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return {
+      choices: [
+        {
+          message: {
+            content: data.choices[0]?.message?.content || "Sem resposta"
+          }
+        }
+      ]
+    };
+  } catch (error) {
+    console.error("[LLM] Error:", error);
+    return {
+      choices: [
+        {
+          message: {
+            content: "Desculpe, houve um erro ao processar sua solicita\xE7\xE3o."
+          }
+        }
+      ]
+    };
+  }
+}
+
+// server/_core/ai.ts
+async function analyzeClimate(surveys2) {
+  const prompt = `Analise os seguintes dados de clima organizacional e forne\xE7a insights:
+${JSON.stringify(surveys2, null, 2)}
+
+Forne\xE7a:
+1. Pontua\xE7\xE3o geral de clima (0-100)
+2. Principais pontos positivos
+3. \xC1reas cr\xEDticas de melhoria
+4. Recomenda\xE7\xF5es acion\xE1veis
+5. Risco de turnover (baixo/m\xE9dio/alto)`;
+  const response = await invokeLLM({
+    messages: [
+      {
+        role: "system",
+        content: "Voc\xEA \xE9 um especialista em clima organizacional e gest\xE3o de pessoas. Analise dados de pesquisas de clima e forne\xE7a insights profundos e acion\xE1veis."
+      },
+      {
+        role: "user",
+        content: prompt
+      }
+    ]
+  });
+  return response.choices[0]?.message.content || "";
+}
+async function analyzePerformance(performanceData) {
+  const prompt = `Analise os seguintes dados de performance:
+${JSON.stringify(performanceData, null, 2)}
+
+Forne\xE7a:
+1. Avalia\xE7\xE3o geral de performance (0-100)
+2. Top performers
+3. Colaboradores que precisam de suporte
+4. Tend\xEAncias de performance
+5. Recomenda\xE7\xF5es de desenvolvimento`;
+  const response = await invokeLLM({
+    messages: [
+      {
+        role: "system",
+        content: "Voc\xEA \xE9 um especialista em gest\xE3o de performance. Analise dados de performance e forne\xE7a insights para melhorar resultados."
+      },
+      {
+        role: "user",
+        content: prompt
+      }
+    ]
+  });
+  return response.choices[0]?.message.content || "";
+}
+async function detectBurnoutRisk(employeeData) {
+  const prompt = `Analise o seguinte perfil de colaborador para detectar risco de burnout:
+${JSON.stringify(employeeData, null, 2)}
+
+Forne\xE7a:
+1. N\xEDvel de risco de burnout (baixo/m\xE9dio/alto/cr\xEDtico)
+2. Sinais de alerta identificados
+3. Fatores contribuintes
+4. Recomenda\xE7\xF5es de interven\xE7\xE3o
+5. A\xE7\xF5es imediatas necess\xE1rias`;
+  const response = await invokeLLM({
+    messages: [
+      {
+        role: "system",
+        content: "Voc\xEA \xE9 um especialista em sa\xFAde ocupacional e bem-estar. Identifique riscos de burnout e recomende interven\xE7\xF5es."
+      },
+      {
+        role: "user",
+        content: prompt
+      }
+    ]
+  });
+  return response.choices[0]?.message.content || "";
+}
+async function generateRecommendations(companyData) {
+  const prompt = `Com base nos seguintes dados da empresa, gere recomenda\xE7\xF5es estrat\xE9gicas:
+${JSON.stringify(companyData, null, 2)}
+
+Forne\xE7a:
+1. Recomenda\xE7\xF5es de curto prazo (1-3 meses)
+2. Recomenda\xE7\xF5es de m\xE9dio prazo (3-6 meses)
+3. Recomenda\xE7\xF5es de longo prazo (6-12 meses)
+4. M\xE9tricas de sucesso
+5. Pr\xF3ximos passos`;
+  const response = await invokeLLM({
+    messages: [
+      {
+        role: "system",
+        content: "Voc\xEA \xE9 um consultor estrat\xE9gico de gest\xE3o de pessoas. Gere recomenda\xE7\xF5es baseadas em dados."
+      },
+      {
+        role: "user",
+        content: prompt
+      }
+    ]
+  });
+  return response.choices[0]?.message.content || "";
+}
+
+// server/storage.ts
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+var s3Client = new S3Client({
+  region: "us-east-1",
+  credentials: {
+    accessKeyId: ENV.awsAccessKeyId,
+    secretAccessKey: ENV.awsSecretAccessKey
+  }
+});
+async function storagePut(key, data, contentType) {
+  const command = new PutObjectCommand({
+    Bucket: ENV.s3Bucket,
+    Key: key,
+    Body: data,
+    ContentType: contentType || "application/octet-stream"
+  });
+  await s3Client.send(command);
+  const url = `https://${ENV.s3Bucket}.s3.amazonaws.com/${key}`;
+  return { url, key };
+}
+
+// server/_core/integrations.ts
+async function sendEmailViaGmail(to, subject, body) {
+  try {
+    const response = await fetch("https://www.googleapis.com/gmail/v1/users/me/messages/send", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.GMAIL_ACCESS_TOKEN}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        raw: Buffer.from(
+          `To: ${to}
+Subject: ${subject}
+
+${body}`
+        ).toString("base64")
+      })
+    });
+    if (!response.ok) {
+      throw new Error("Failed to send email via Gmail");
+    }
+    return { success: true, messageId: (await response.json()).id };
+  } catch (error) {
+    console.error("[Gmail] Error sending email:", error);
+    return { success: false, error: String(error) };
+  }
+}
+async function sendEmailViaOutlook(to, subject, body) {
+  try {
+    const response = await fetch("https://graph.microsoft.com/v1.0/me/sendMail", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.OUTLOOK_ACCESS_TOKEN}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: {
+          subject,
+          body: { contentType: "HTML", content: body },
+          toRecipients: [{ emailAddress: { address: to } }]
+        }
+      })
+    });
+    if (!response.ok) {
+      throw new Error("Failed to send email via Outlook");
+    }
+    return { success: true };
+  } catch (error) {
+    console.error("[Outlook] Error sending email:", error);
+    return { success: false, error: String(error) };
+  }
+}
+async function sendWhatsAppMessage(phoneNumber, message) {
+  try {
+    const response = await fetch(
+      `https://graph.instagram.com/v18.0/${process.env.WHATSAPP_PHONE_ID}/messages`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAPP_API_TOKEN}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          recipient_type: "individual",
+          to: phoneNumber,
+          type: "text",
+          text: { body: message }
+        })
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to send WhatsApp message");
+    }
+    return { success: true, messageId: (await response.json()).messages[0].id };
+  } catch (error) {
+    console.error("[WhatsApp] Error sending message:", error);
+    return { success: false, error: String(error) };
+  }
+}
+async function uploadFileToS3(filename, fileBuffer, mimeType) {
+  try {
+    const key = `uploads/${Date.now()}-${filename}`;
+    const result = await storagePut(key, fileBuffer, mimeType);
+    return { success: true, url: result.url, key: result.key };
+  } catch (error) {
+    console.error("[S3] Error uploading file:", error);
+    return { success: false, error: String(error) };
+  }
+}
+async function initiateWebRTCCall(initiatorId, recipientId) {
+  try {
+    return {
+      success: true,
+      callId: `call-${Date.now()}`,
+      signalingServer: process.env.SIGNALING_SERVER_URL,
+      stunServers: process.env.STUN_SERVERS?.split(",") || [
+        "stun:stun.l.google.com:19302",
+        "stun:stun1.l.google.com:19302"
+      ]
+    };
+  } catch (error) {
+    console.error("[WebRTC] Error initiating call:", error);
+    return { success: false, error: String(error) };
+  }
+}
+
+// server/routers-extended.ts
+var aiRouter = router({
+  analyzeClimate: protectedProcedure.input(z.object({ surveyData: z.array(z.any()) })).mutation(async ({ input }) => {
+    const analysis = await analyzeClimate(input.surveyData);
+    return { success: true, analysis };
+  }),
+  analyzePerformance: protectedProcedure.input(z.object({ performanceData: z.array(z.any()) })).mutation(async ({ input }) => {
+    const analysis = await analyzePerformance(input.performanceData);
+    return { success: true, analysis };
+  }),
+  detectBurnout: protectedProcedure.input(z.object({ employeeData: z.any() })).mutation(async ({ input }) => {
+    const analysis = await detectBurnoutRisk(input.employeeData);
+    return { success: true, analysis };
+  }),
+  generateRecommendations: protectedProcedure.input(z.object({ companyData: z.any() })).mutation(async ({ input }) => {
+    const recommendations = await generateRecommendations(input.companyData);
+    return { success: true, recommendations };
+  })
+});
+var integrationsRouter = router({
+  sendEmailGmail: protectedProcedure.input(z.object({ to: z.string().email(), subject: z.string(), body: z.string() })).mutation(async ({ input }) => {
+    const result = await sendEmailViaGmail(input.to, input.subject, input.body);
+    return result;
+  }),
+  sendEmailOutlook: protectedProcedure.input(z.object({ to: z.string().email(), subject: z.string(), body: z.string() })).mutation(async ({ input }) => {
+    const result = await sendEmailViaOutlook(input.to, input.subject, input.body);
+    return result;
+  }),
+  sendWhatsApp: protectedProcedure.input(z.object({ phoneNumber: z.string(), message: z.string() })).mutation(async ({ input }) => {
+    const result = await sendWhatsAppMessage(input.phoneNumber, input.message);
+    return result;
+  }),
+  uploadFileS3: protectedProcedure.input(z.object({ filename: z.string(), mimeType: z.string(), fileBuffer: z.any() })).mutation(async ({ input }) => {
+    const result = await uploadFileToS3(input.filename, input.fileBuffer, input.mimeType);
+    return result;
+  }),
+  initiateCall: protectedProcedure.input(z.object({ recipientId: z.string() })).mutation(async ({ input, ctx }) => {
+    const result = await initiateWebRTCCall(ctx.user.id, input.recipientId);
+    return result;
+  })
+});
+var extendedRouter = router({
+  ai: aiRouter,
+  integrations: integrationsRouter
+});
+
+// server/routers.ts
 var appRouter = router({
   system: systemRouter,
   auth: router({
@@ -727,11 +1048,11 @@ var appRouter = router({
       });
       return getEmployeesByCompany(filter.companyId);
     }),
-    create: protectedProcedure.input(z.object({
-      name: z.string(),
-      email: z.string().email(),
-      position: z.string(),
-      departmentId: z.number().optional()
+    create: protectedProcedure.input(z2.object({
+      name: z2.string(),
+      email: z2.string().email(),
+      position: z2.string(),
+      departmentId: z2.number().optional()
     })).mutation(async ({ input, ctx }) => {
       const user = ctx.user;
       if (!user?.companyId) throw new Error("Sem empresa associada");
@@ -760,10 +1081,10 @@ var appRouter = router({
       });
       return getSalesByCompany(filter.companyId);
     }),
-    create: protectedProcedure.input(z.object({
-      clientName: z.string(),
-      value: z.string(),
-      status: z.enum(["prospect", "negotiation", "closed_won", "closed_lost"])
+    create: protectedProcedure.input(z2.object({
+      clientName: z2.string(),
+      value: z2.string(),
+      status: z2.enum(["prospect", "negotiation", "closed_won", "closed_lost"])
     })).mutation(async ({ input, ctx }) => {
       const user = ctx.user;
       if (!user?.companyId) throw new Error("Sem empresa associada");
@@ -789,11 +1110,11 @@ var appRouter = router({
       if (!user.companyId) return [];
       return [];
     }),
-    create: protectedProcedure.input(z.object({
-      title: z.string(),
-      description: z.string().optional(),
-      targetValue: z.string(),
-      dueDate: z.date().optional()
+    create: protectedProcedure.input(z2.object({
+      title: z2.string(),
+      description: z2.string().optional(),
+      targetValue: z2.string(),
+      dueDate: z2.date().optional()
     })).mutation(async ({ input, ctx }) => {
       const user = ctx.user;
       if (!user?.companyId) throw new Error("Sem empresa associada");
@@ -823,11 +1144,11 @@ var appRouter = router({
       });
       return getTasksByCompany(filter.companyId);
     }),
-    create: protectedProcedure.input(z.object({
-      title: z.string(),
-      description: z.string().optional(),
-      priority: z.enum(["low", "medium", "high", "urgent"]).optional(),
-      dueDate: z.date().optional()
+    create: protectedProcedure.input(z2.object({
+      title: z2.string(),
+      description: z2.string().optional(),
+      priority: z2.enum(["low", "medium", "high", "urgent"]).optional(),
+      dueDate: z2.date().optional()
     })).mutation(async ({ input, ctx }) => {
       const user = ctx.user;
       if (!user?.companyId) throw new Error("Sem empresa associada");
@@ -877,27 +1198,17 @@ var appRouter = router({
     })
   }),
   // IA ASSISTENTE
-  ia: router({
-    chat: protectedProcedure.input(z.object({ message: z.string() })).mutation(async ({ input, ctx }) => {
-      const user = ctx.user;
-      const profile = user.profile || "operacional";
-      if (!canViewModule(profile, "ia")) {
-        throw new Error("Voc\xEA n\xE3o tem permiss\xE3o para usar a IA");
-      }
-      return {
-        response: `Resposta da IA para: ${input.message}`,
-        timestamp: /* @__PURE__ */ new Date()
-      };
-    })
-  }),
+  ia: aiRouter,
+  // INTEGRAÇÕES EXTERNAS
+  integrations: integrationsRouter,
   // ADMIN - GESTÃO DE EMPRESAS
   admin: router({
     companies: router({
-      createWithTestUser: adminProcedure.input(z.object({
-        companyName: z.string().min(1),
-        cnpj: z.string().optional(),
-        description: z.string().optional(),
-        plan: z.enum(["starter", "professional", "enterprise"]).default("starter")
+      createWithTestUser: adminProcedure.input(z2.object({
+        companyName: z2.string().min(1),
+        cnpj: z2.string().optional(),
+        description: z2.string().optional(),
+        plan: z2.enum(["starter", "professional", "enterprise"]).default("starter")
       })).mutation(async ({ input, ctx }) => {
         if (!ctx.user) throw new Error("Unauthorized");
         const company = await createCompany({
@@ -919,7 +1230,7 @@ var appRouter = router({
         if (!ctx.user) return [];
         return getCompaniesByOwner(ctx.user.id);
       }),
-      getById: adminProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
+      getById: adminProcedure.input(z2.object({ id: z2.number() })).query(async ({ input }) => {
         return getCompanyById(input.id);
       })
     })
@@ -975,10 +1286,10 @@ app.use(
     createContext: async (opts) => createContext(opts.req, opts.res)
   })
 );
-app.use(express.static("client/dist"));
+app.use(express.static("dist/public"));
 app.get("*", (req, res) => {
   if (!req.path.startsWith("/api")) {
-    res.sendFile("client/dist/index.html", { root: "." });
+    res.sendFile("dist/public/index.html", { root: "." });
   } else {
     res.status(404).json({ error: "Not found" });
   }
