@@ -113,3 +113,9 @@
 [2026-04-09T22:47:05.677Z] Node.js v22.13.0
 [2026-04-10T12:41:55.115Z] 8:41:55 AM [tsx] change in ./server/routers-extended.ts Restarting...
 [2026-04-10T12:41:56.411Z] c[Server] ORIZON SaaS running on port 3000
+[2026-04-10T13:07:36.540Z] 9:07:36 AM [tsx] change in ./server/storage.ts Restarting...
+[2026-04-10T13:07:37.629Z] c[Server] ORIZON SaaS running on port 3000
+[2026-04-10T13:14:15.909Z] Dev server process group stopped
+[2026-04-10T13:14:15.929Z] Dev server exited with code -15
+[2026-04-10T13:14:22.448Z] Starting dev server with command: NODE_ENV=development tsx watch server/_core/index.ts
+[2026-04-10T13:14:23.713Z] [Server] ORIZON SaaS running on port 3000

@@ -844,24 +844,8 @@ Forne\xE7a:
 }
 
 // server/storage.ts
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-var s3Client = new S3Client({
-  region: "us-east-1",
-  credentials: {
-    accessKeyId: ENV.awsAccessKeyId,
-    secretAccessKey: ENV.awsSecretAccessKey
-  }
-});
 async function storagePut(key, data, contentType) {
-  const command = new PutObjectCommand({
-    Bucket: ENV.s3Bucket,
-    Key: key,
-    Body: data,
-    ContentType: contentType || "application/octet-stream"
-  });
-  await s3Client.send(command);
-  const url = `https://${ENV.s3Bucket}.s3.amazonaws.com/${key}`;
+  const url = `https://storage.example.com/${key}`;
   return { url, key };
 }
 
