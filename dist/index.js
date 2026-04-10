@@ -1009,7 +1009,7 @@ var integrationsRouter = router({
     return result;
   }),
   initiateCall: protectedProcedure.input(z.object({ recipientId: z.string() })).mutation(async ({ input, ctx }) => {
-    const result = await initiateWebRTCCall(ctx.user.id, input.recipientId);
+    const result = await initiateWebRTCCall(String(ctx.user.id), input.recipientId);
     return result;
   })
 });

@@ -49,7 +49,7 @@ export default function Home() {
                 <strong>Email:</strong> {user.email}
               </p>
               <p className="text-gray-700">
-                <strong>Perfil:</strong> {user.profile || "Não definido"}
+                <strong>Role:</strong> {user.role || "user"}
               </p>
             </div>
 
