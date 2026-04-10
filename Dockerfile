@@ -2,16 +2,16 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-# Copiar package files
-COPY package.json pnpm-lock.yaml ./
+# Copiar apenas package.json
+COPY package.json ./
 
 # Instalar pnpm
 RUN npm install -g pnpm@10.4.1
 
-# Instalar dependências (sem frozen-lockfile para evitar erro de lockfile desatualizado)
-RUN pnpm install
+# Instalar dependências (sem lockfile, deixar pnpm criar um novo)
+RUN pnpm install --no-frozen-lockfile
 
-# Copiar código
+# Copiar resto do código
 COPY . .
 
 # Build
